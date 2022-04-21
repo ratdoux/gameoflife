@@ -8,10 +8,12 @@ export default function (props) {
     const cellS = 3.5;
     let cellSizeParam = 3;
     const devicePixelRatio = window.devicePixelRatio = 1;
+
     const gridSizeWidthRef = useRef(Math.floor(window.innerWidth/cellSizeParam));
     const gridSizeHeightRef = useRef(Math.floor(window.innerHeight/cellSizeParam));
     const gridSizeWidth = gridSizeWidthRef.current;
     const gridSizeHeight = gridSizeHeightRef.current;
+
     const [canvasSize, setCanvasSize] = useState({width: (window.innerWidth/cellS)*cellSizeParam+160, height: (window.innerHeight/cellS)*cellSizeParam});
     const width = canvasSize.width/devicePixelRatio;
     const height = canvasSize.height/devicePixelRatio;
@@ -49,6 +51,31 @@ export default function (props) {
         scale : 5
     });
 
+    const userAgentRef = useRef(navigator.userAgent);
+    const browserNameRef = useRef(0);
+
+    const testSet = useRef(new Set());
+
+
+    useEffect(()=>{
+        if(userAgentRef.current.match(/chrome|chromium|crios/i)){
+            browserNameRef.current = 1;
+        }else if(userAgentRef.current.match(/firefox|fxios/i)){
+            browserNameRef.current = 2;
+        }  else if(userAgentRef.current.match(/safari/i)){
+            browserNameRef.current = 3;
+        }else if(userAgentRef.current.match(/opr\//i)){
+            browserNameRef.current = 4;
+        } else if(userAgentRef.current.match(/edg/i)){
+            browserNameRef.current = 5;
+        }else{
+            browserNameRef.current=-1;
+        }
+    }
+    ,[]);
+
+
+
     function changeCell(x, y, changeTo) {
         setGridState(prev => ({
                     ...prev,
@@ -58,6 +85,7 @@ export default function (props) {
                 }
             )
         );
+        !testSet.current.has(x+"-"+y) ? testSet.current.add(x+"-"+y) : testSet.current.delete(x+"-"+y);
     }
 
     //calculate cell, mutates nextStateData with the next state of the cells
@@ -76,17 +104,20 @@ export default function (props) {
         if (gridState[x][y]) {
             if (aliveNeighbours < cellParameters.aloneNumber || aliveNeighbours > cellParameters.suffocateNumber) {
                 nextStateData[x][y] = false;
+                testSet.current.delete(x+"-"+y)
             } else {
                 nextStateData[x][y] = true;
-
+                testSet.current.add(x+"-"+y)
             }
 
         } else {
             if (aliveNeighbours === cellParameters.bornNumber) {
                 nextStateData[x][y] = true;
+                testSet.current.add(x+"-"+y)
 
             } else {
                 nextStateData[x][y] = false;
+                testSet.current.delete(x+"-"+y)
             }
 
         }
@@ -102,11 +133,9 @@ export default function (props) {
             }
         }
         //updates gridState with the updated nextStateData
-        const temp = gridState;
         setGridState(nextStateData);
-
-        //nextStateData purge
-        nextStateData = temp;
+        nextStateData = (Array(gridSizeWidth).fill().map(function () {
+            return new Array(gridSizeHeight).fill(false)}));
 
     }
 
@@ -169,18 +198,41 @@ export default function (props) {
     const draw = (ctx) => {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = "#4AF626";
-        ctx.beginPath();
-        for (let i = 0; i < gridSizeWidth; i++) {
-            for (let j = 0; j < gridSizeHeight; j++) {
-                if (gridState[i][j]) {
-                    //ctx.fillRect(i*cellSizeParam,j*cellSizeParam,cellSizeParam,cellSizeParam);
-                    ctx.rect(i*cellSizeParam, j*cellSizeParam, cellSizeParam, cellSizeParam);
+
+
+        if(browserNameRef.current === 2){
+            for (let i = 0; i < gridSizeWidth; i++) {
+                for (let j = 0; j < gridSizeHeight; j++) {
+                    if (gridState[i][j]) {
+                        ctx.fillRect(i*cellSizeParam,j*cellSizeParam,cellSizeParam,cellSizeParam);
+                    }
                 }
             }
         }
+        else
+        {
+            ctx.beginPath();
+            for (let i = 0; i < gridSizeWidth; i++) {
+                for (let j = 0; j < gridSizeHeight; j++) {
+                    if (gridState[i][j]) {
 
-        ctx.fill();
-        ctx.closePath();
+                        ctx.rect(i*cellSizeParam, j*cellSizeParam, cellSizeParam, cellSizeParam);
+                    }
+                }
+            }
+
+            /*for(let cell of testSet.current){
+                let [x,y] = cell.split("-");
+                ctx.rect(x*cellSizeParam, y*cellSizeParam, cellSizeParam, cellSizeParam);
+            }*/
+
+
+            ctx.fill();
+            ctx.closePath();
+        }
+
+
+
     };
     const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
@@ -250,9 +302,8 @@ export default function (props) {
         const y = Math.floor(temp.y/cellSizeParam);
         const cellAlive = gridState[x][y];
         changeCell(x, y, !cellAlive);
+        testSet.current.add(x+"-"+y);
     }
-
-
 
 return (
     <div className="gridContainer">
