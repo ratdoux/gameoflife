@@ -1,0 +1,315 @@
+.gridContainer{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.gridFixer{
+}
+
+.grid{
+
+    display: grid;
+    margin-top: 105px;
+    border: 5px solid #4AF626;
+
+}
+
+.navBar{
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    border: 3px solid #4AF626;
+    padding-bottom: 10px;
+    height: 7vh;
+}
+@media all and (max-width: 200px){
+    .navBar{
+        width: 120%;
+    }
+}
+
+.navBar p{
+    font-size: 0.7vw;
+    font-family: 'Press Start 2P', cursive;
+    color: #4AF626;
+}
+
+.navBar button{
+    height: 5vh;
+    width: 5vw;
+    color: #4AF626;
+    background-color: black;
+    border-color: #4AF626;
+    border-radius: 0px;
+    font-family: 'Press Start 2P', cursive;
+    margin-top: 10px;
+    font-size: 0.7vw;
+}
+
+.navBar button:hover{
+    background-color: #4AF626;
+    color: black;
+}
+
+
+.navBar input::-webkit-slider-thumb:hover{
+    background-color: #4AF626;
+    color: black;
+}
+
+.navBar input::-moz-range-thumb:hover{
+    background-color: #4AF626;
+    color: black;
+}
+
+.navBar input::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.navBar input::-moz-range-thumb{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.aloneNumber{
+    -webkit-appearance: none;
+    width: 4vw;
+    height: 2.5vh;
+    background: #000;
+    outline: none;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+    color : #4AF626;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    caret-shape: underscore;
+}
+
+
+.aloneNumber:focus{
+    background-color: #4AF626;
+    color: black;
+}
+
+.suffocateNumber {
+    -webkit-appearance: none;
+    width: 4vw;
+    height: 2.5vh;
+    background: #000;
+    outline: none;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+    color: #4AF626;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+}
+
+
+.suffocateNumber:focus{
+    background-color: #4AF626;
+    color: black;
+}
+
+.div-bornNumber{
+    margin-right: 4vw;
+}
+
+.bornNumber{
+    -webkit-appearance: none;
+    width: 4vw;
+    height: 2.5vh;
+    background: #000;
+    outline: none;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+    color: #4AF626;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+}
+
+.bornNumber:focus{
+    background-color: #4AF626;
+    color: black;
+}
+
+.speed.slidercontainer p{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #4AF626;
+}
+
+
+.slider{
+    -webkit-appearance: none;
+    width: 8vw;
+    height: 15px;
+    background: #000;
+    outline: none;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+    direction: rtl;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 30px;
+    background: #000;
+    cursor: pointer;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+}
+
+/* for firefox */
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 30px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid #4AF626;
+    border-radius: 1px;
+}
+
+.gridSize{
+    -webkit-appearance: none;
+    width: 8vw;
+    height: 15px;
+    background: #000;
+    outline: none;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+}
+
+.gridSize::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 30px;
+    background: #000;
+    cursor: pointer;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+}
+
+/* for firefox */
+.gridSize::-moz-range-thumb {
+    width: 20px;
+    height: 30px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid #4AF626;
+    border-radius: 1px;
+}
+
+.cellSize{
+    -webkit-appearance: none;
+    width: 8vw;
+    height: 15px;
+    background: #000;
+    outline: none;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+    direction: rtl;
+}
+
+.cellSize::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 30px;
+    background: #000;
+    cursor: pointer;
+    border: 2px solid #4AF626;
+    border-radius: 1px;
+}
+
+/* for firefox */
+.cellSize::-moz-range-thumb {
+    width: 20px;
+    height: 30px;
+    background: #000;
+    cursor: pointer;
+    border: 5px solid #4AF626;
+    border-radius: 1px;
+}
+
+.misc{
+    display: flex;
+    flex-direction: column;
+    border : 2px solid #4AF626;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.misc button{
+    margin: 0;
+    height: 3vh;
+    width: 5vw;
+    color: #4AF626;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 0px;
+    font-family: 'Press Start 2P', cursive;
+    border-top: transparent;
+    border-bottom: transparent;
+}
+
+.misc button:hover{
+    border-color: #4AF626;
+}
+
+.misc button:active{
+    border-width: 5px;
+}
+
+
+.textContainer{
+    position: absolute;
+    top: 20vh;
+    left: 2vw;
+}
+
+.helpText{
+    width: 50vw;
+    color: #4AF626;
+    background-color: black;
+    border: 5px solid #4AF626;
+    padding: 5px;
+
+}
+.aboutText{
+    width: 50vw;
+    color: #4AF626;
+    background-color: black;
+    border: 5px solid #4AF626;
+    padding: 5px;
+}
+
+@keyframes blink {
+    from,
+    to {
+        font-size: 0px;
+        height: 0px;
+    }
+    100% {
+        height: 50%;
+    }
+}
+
+.gridFixer{
+    background-color: white;
+    margin: 10vh 0 0;
+    padding: 0;
+    border: 5px solid #4AF626;
+}
