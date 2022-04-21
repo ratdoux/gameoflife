@@ -1,38 +1,36 @@
 import "./Grid.css";
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect, useRef, useLayoutEffect} from "react";
 import GridRendering from "./GridRendering";
 
 export default function (props) {
-    const cells = [];
     const {help, about} = props;
 
     const cellS = 3.5;
-    const cellSizeParam = 3;
-    const [zoom, setZoom] = useState(cellS);
-    const [windowParameters, setWindowParameters] = useState({
-        cellSize: zoom,
-        gridSizeWidth: Math.floor(window.innerWidth/cellSizeParam),
-        gridSizeHeight: Math.floor(window.innerHeight/cellSizeParam),
-    });
+    let cellSizeParam = 3;
+    const devicePixelRatio = window.devicePixelRatio = 1;
+    const gridSizeWidthRef = useRef(Math.floor(window.innerWidth/cellSizeParam));
+    const gridSizeHeightRef = useRef(Math.floor(window.innerHeight/cellSizeParam));
+    const gridSizeWidth = gridSizeWidthRef.current;
+    const gridSizeHeight = gridSizeHeightRef.current;
+    const [canvasSize, setCanvasSize] = useState({width: (window.innerWidth/cellS)*cellSizeParam+160, height: (window.innerHeight/cellS)*cellSizeParam});
+    const width = canvasSize.width/devicePixelRatio;
+    const height = canvasSize.height/devicePixelRatio;
 
-
-
-    const gridSizeWidth = windowParameters.gridSizeWidth;
-    const gridSizeHeight = windowParameters.gridSizeHeight;
-    const cellSize = windowParameters.cellSize;
-
-    const width = (window.innerWidth/cellS+cellS)*cellSizeParam+150;
-    const height = (window.innerHeight/cellS)*cellSizeParam;
-
-
-    let nextStateData = Array(gridSizeWidth).fill().map(function () {
-        return new Array(gridSizeHeight).fill(false)
-    });
-
-
+    let nextStateData = (Array(gridSizeWidth).fill().map(function () {
+        return new Array(gridSizeHeight).fill(false)}));
 
     //gridState is the state of our current grid of cells
     const [gridState, setGridState] = useState(nextStateData);
+    useLayoutEffect(() => {
+        window.addEventListener("resize", () => {
+            setCanvasSize({width: (window.innerWidth/cellS)*cellSizeParam+160, height: (window.innerHeight/cellS)*cellSizeParam});
+        }
+
+        );
+
+    }, []);
+
+
     const [delay, setDelay] = useState(1000);
     const [isRunning, setIsRunning] = useState(true);
     const [cellParameters, setCellParameters] = useState({
@@ -46,9 +44,9 @@ export default function (props) {
     });
 
     const [originStates, setOriginStates] = useState({
-        x : 0,
-        y : 0,
-        scale : 1
+        x : -window.innerWidth,
+        y : -window.innerHeight,
+        scale : 5
     });
 
     function changeCell(x, y, changeTo) {
@@ -104,14 +102,15 @@ export default function (props) {
             }
         }
         //updates gridState with the updated nextStateData
+        const temp = gridState;
         setGridState(nextStateData);
 
         //nextStateData purge
-        nextStateData = Array(gridSizeWidth).fill().map(function () {
-            return new Array(gridSizeHeight).fill(false)
-        });
+        nextStateData = temp;
 
     }
+
+
 
     function useInterval(callback, delay) {
         const savedCallback = useRef();
@@ -167,26 +166,21 @@ export default function (props) {
 
   //className="grid" style={gridStyle}
 
-
-
-    function drawCell(x, y, ctx){
-        ctx.fillStyle = "#4AF626";
-        ctx.fillRect(x*cellSizeParam,y*cellSizeParam,cellSizeParam,cellSizeParam);
-    }
-
-
-
     const draw = (ctx) => {
         ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "#4AF626";
+        ctx.beginPath();
         for (let i = 0; i < gridSizeWidth; i++) {
             for (let j = 0; j < gridSizeHeight; j++) {
                 if (gridState[i][j]) {
-                    drawCell(i, j, ctx);
+                    //ctx.fillRect(i*cellSizeParam,j*cellSizeParam,cellSizeParam,cellSizeParam);
+                    ctx.rect(i*cellSizeParam, j*cellSizeParam, cellSizeParam, cellSizeParam);
                 }
             }
         }
 
         ctx.fill();
+        ctx.closePath();
     };
     const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
@@ -235,14 +229,9 @@ export default function (props) {
 
     function doZoomOnce(context)
     {
-        // zoom in amount
-        context.setTransform(5, 0, 0, 5, -window.innerWidth, -window.innerHeight);
-        setOriginStates({
-            x: -window.innerWidth,
-            y: -window.innerHeight,
-            scale: 5
-        })
+        context.setTransform(originStates.scale, 0, 0, originStates.scale, originStates.x, originStates.y);
         draw(context)
+
     }
 
     function toWorld(x, y) {  // convert to world coordinates
@@ -299,7 +288,7 @@ return (
 
         <div className="speed.slidercontainer">
             <p>Simulation Speed</p>
-            <input className="slider" type="range" min="5" max="1000" value={delay} onChange={(e) => setDelay(parseInt(e.target.value))} />
+            <input className="slider" type="range" min="1" max="1000" value={delay} onChange={(e) => setDelay(parseInt(e.target.value))} />
         </div>
 
           <div>

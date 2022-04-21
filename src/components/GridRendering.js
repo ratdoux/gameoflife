@@ -36,7 +36,7 @@ import "./Grid.css";
 
 
 
-        return <canvas id="canvas" ref={canvasRef} width={width} height={height} onClick={getPointerPosition} onWheel={zoomCallBack}/>
+        return <canvas id="canvas" ref={canvasRef} width={width} height={height} onClick={getPointerPosition} onWheel={zoomCallBack} style={{alpha:false}}/>
     }
 
 export default GridRendering
